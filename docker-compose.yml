@@ -1,0 +1,22 @@
+services:
+  exllama-batch-quant-docker:
+    container_name: exllama-batch-quant-docker
+    image: ghcr.io/matatonic/exllama-batch-quant-docker
+    build:
+      dockerfile: Dockerfile
+    tty: true
+    user: ${UID:-1000}:${GID:-1000}
+    environment:
+      #- CUDA_VISIBLE_DEVICES=0
+      #- CUDA_DEVICE_ORDER=PCI_BUS_ID
+      - CLI_ARGS=${CLI_ARGS}
+    volumes:
+      - ./models:/app/models
+      - ./exl2tmp:/exl2tmp
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
